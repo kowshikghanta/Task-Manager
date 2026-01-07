@@ -1,10 +1,11 @@
 package com.kowshik.taskmanager.service;
 
+import com.kowshik.taskmanager.dto.UserResponseDTO;
 import com.kowshik.taskmanager.entity.User;
 import com.kowshik.taskmanager.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
+import com.kowshik.taskmanager.dto.UserResponseDTO;
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -15,7 +16,7 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(User user) {
+    public UserResponseDTO createUser(User user) {
 
         //Business Logic: check if email is unique
         if (userRepository.existsByEmail(user.getEmail()))
@@ -26,7 +27,13 @@ public class UserService {
             user.setRole("USER");
 
         User savedUser = userRepository.save(user);
-        userRepository.flush();
-        return savedUser;
+
+        return new UserResponseDTO(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail(),
+                savedUser.getRole(),
+                savedUser.getCreatedAt()
+        );
     }
 }

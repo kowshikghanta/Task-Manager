@@ -1,5 +1,6 @@
 package com.kowshik.taskmanager.controller;
 
+import com.kowshik.taskmanager.dto.UserResponseDTO;
 import com.kowshik.taskmanager.entity.User;
 import com.kowshik.taskmanager.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody User user) {
+        UserResponseDTO createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 }
