@@ -1,11 +1,17 @@
 package com.kowshik.taskmanager.service;
 
+import com.kowshik.taskmanager.dto.UserRequestDTO;
 import com.kowshik.taskmanager.dto.UserResponseDTO;
 import com.kowshik.taskmanager.entity.User;
+import com.kowshik.taskmanager.exception.EmailAlreadyExistsException;
 import com.kowshik.taskmanager.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import com.kowshik.taskmanager.dto.UserResponseDTO;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -16,15 +22,18 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDTO createUser(User user) {
+    public UserResponseDTO createUser(UserRequestDTO request) {
 
         //Business Logic: check if email is unique
-        if (userRepository.existsByEmail(user.getEmail()))
-            throw new RuntimeException("Email Already Exists");
+        if (userRepository.existsByEmail(request.getEmail()))
+            throw new EmailAlreadyExistsException("Email exists");
 
-        //Business Logic: if role doesnt exist, assign default role
-        if (user.getRole() == null)
-            user.setRole("USER");
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole("USER");
+        user.setCreatedAt(LocalDateTime.now());
 
         User savedUser = userRepository.save(user);
 
@@ -35,5 +44,18 @@ public class UserService {
                 savedUser.getRole(),
                 savedUser.getCreatedAt()
         );
+    }
+
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
     }
 }
