@@ -19,28 +19,28 @@ services:
       timeout: 5s
       retries: 5
 
-    orbit-backend:
-        build: .
-        container_name: orbit-backend
-        ports:
-          - "9090:9090"
-        environment:
-          - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/task_manager_db?allowPublicKeyRetrieval=true&useSSL=false
-          - SPRING_DATASOURCE_USERNAME=app_user
-          - SPRING_DATASOURCE_PASSWORD=Kowshik@1234
-        depends_on:
-          mysql:
-            condition: service_healthy
+  orbit-backend:
+    build: .
+    container_name: orbit-backend
+    ports:
+      - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/task_manager_db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=app_user
+      - SPRING_DATASOURCE_PASSWORD=Kowshik@1234
+    depends_on:
+      mysql:
+        condition: service_healthy
 
-    orbit-frontend:
-        image: nginx:alpine
-        container_name: orbit-frontend
-        ports:
-          - "5500:80"
-        volumes:
-          - ./frontend:/usr/share/nginx/html:ro
-        depends_on:
-          - orbit-backend
+  orbit-frontend:
+    image: nginx:alpine
+    container_name: orbit-frontend
+    ports:
+      - "5500:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - orbit-backend
 
 volumes:
   orbit-mysql-data:

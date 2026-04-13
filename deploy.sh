@@ -15,8 +15,8 @@ echo "2. Pushing to GitHub (Origin/Main)..."
 git push origin main || echo "Push failed, but continuing local deployment..."
 
 echo "3. Re-building entire Full Stack container architecture..."
-docker-compose down
-docker-compose up -d --build
+docker compose down
+docker compose up -d --build
 
 echo ""
 echo "==================================="
