@@ -37,7 +37,7 @@ services:
     ports:
       - "5500:80"
     volumes:
-      - ./frontend:/usr/share/nginx/html:ro
+      - ./frontend:/usr/share/nginx/html:ro,z
     depends_on:
       - orbit-backend
 
