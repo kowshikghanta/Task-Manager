@@ -41,8 +41,12 @@ public class TaskService {
         return mapToDTO(saved);
     }
 
-    public PaginatedResponseDTO<TaskResponseDTO> getTasksByUser(Long userId, String status, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public PaginatedResponseDTO<TaskResponseDTO> getTasksByUser(Long userId, String status, int pageNo, int pageSize, String sortDirection) {
+        org.springframework.data.domain.Sort sort = sortDirection.equalsIgnoreCase("asc") ? 
+            org.springframework.data.domain.Sort.by("createdAt").ascending() : 
+            org.springframework.data.domain.Sort.by("createdAt").descending();
+            
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Task> tasksPage;
 
         if (status != null && !status.isEmpty()) {
@@ -65,6 +69,17 @@ public class TaskService {
         );
     }
 
+    public TaskResponseDTO updateTaskFull(Long userId, Long taskId, TaskRequestDTO request) {
+        Task task = taskRepository.findByIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new RuntimeException("Task not found or doesn't belong to user"));
+
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        task.setUpdatedAt(LocalDateTime.now());
+        Task updatedTask = taskRepository.save(task);
+        return mapToDTO(updatedTask);
+    }
+
     public TaskResponseDTO updateTaskStatus(Long userId, Long taskId, String status) {
         Task task = taskRepository.findByIdAndUserId(taskId, userId)
                 .orElseThrow(() -> new RuntimeException("Task not found or doesn't belong to user"));
@@ -79,6 +94,23 @@ public class TaskService {
         Task task = taskRepository.findByIdAndUserId(taskId, userId)
                 .orElseThrow(() -> new RuntimeException("Task not found or doesn't belong to user"));
         taskRepository.delete(task);
+    }
+
+    public java.util.Map<String, Object> getGlobalMetrics() {
+        long totalPending = taskRepository.countByStatus("PENDING");
+        long totalInProgress = taskRepository.countByStatus("IN_PROGRESS");
+        long totalCompleted = taskRepository.countByStatus("COMPLETED");
+        
+        long total = totalPending + totalInProgress + totalCompleted;
+        
+        java.util.Map<String, Object> metrics = new java.util.HashMap<>();
+        metrics.put("totalTasks", total);
+        metrics.put("pendingTasks", totalPending);
+        metrics.put("inProgressTasks", totalInProgress);
+        metrics.put("completedTasks", totalCompleted);
+        metrics.put("activeUsers", userRepository.count());
+        
+        return metrics;
     }
 
     private TaskResponseDTO mapToDTO(Task task) {

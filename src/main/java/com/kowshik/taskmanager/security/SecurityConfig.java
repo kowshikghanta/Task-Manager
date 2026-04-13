@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll() // register
                         .requestMatchers("/api/auth/login").permitAll() // login
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow OPTIONS
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

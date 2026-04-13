@@ -1,139 +1,99 @@
-# 🧠 Task Manager Backend
+# 🚀 Orbit Task Manager: Full Stack Application
 
-A RESTful backend application built using Spring Boot that allows users to manage tasks with proper structure, validation, and scalable architecture.
-
----
-
-## 🚀 Features Implemented
-
-### 👤 User Management
-
-* Create users via REST API
-* Email uniqueness validation
-* DTO-based request/response handling
-* Clean separation between API and database models
+Orbit Task Manager is a production-ready, highly aesthetic Full Stack application that relies on an expertly tailored standard vanilla frontend bridging natively into a robustly scaled Spring Boot / MySQL database layer. It is built natively for Docker. 
 
 ---
 
-### 📋 Task Management
+## ✨ Core Features
 
-* Create tasks for specific users
-* Fetch tasks by user
-* Update task status (PENDING → IN_PROGRESS → COMPLETED)
-* Delete tasks
+### 1. Robust JWT Authentication Engine (Backend)
+- Passwords are encrypted before database insertion using BCrypt.
+- Authenticating generates deeply signed JSON Web Tokens (10 hr expiry).
+- Global API firewall automatically blocks anonymous traffic with standard `401 Unauthorized` / `403 Forbidden` responses.
+- Exceptions handled uniformly gracefully across bad routes and payloads.
 
----
+### 2. Glassmorphic SPA Frontend (Frontend)
+- **High Aesthetic Values**: Orbit incorporates floating gradients, soft glass backdrops, CSS micro-animations, and pure SPA `DOM` wiping, meaning the page natively processes queries and animations locally without aggressively reloading the URL.
+- **Client Side State**: Maintains logical token parameters locally so your `Authorization` bearer token handles the handshake invisibly.
+- **Dynamic Task Loading**: Incorporates robust native pagination mapping natively back to the endpoints. Status toggle switches limit API load, sorting tasks flawlessly natively to JPA.
 
-### 🔗 Relationships
-
-* One-to-Many relationship:
-
-    * One User → Multiple Tasks
-* Implemented using JPA (`@ManyToOne`)
-
----
-
-### 🧱 Architecture
-
-* Layered structure:
-
-    * Controller → Service → Repository
-* DTO-based API design
-* Clean separation of concerns
+### 3. Integrated Tooling 
+- **Swagger Documentation:** All URL mappings natively self-document under `http://localhost:9090/swagger-ui.html`. The dashboard incorporates an 'Authorize' token module allowing API manipulation inside the documentation.
+- **Docker Ready:** Deploy cleanly off a tiny containerized footprint via pure CLI.
 
 ---
 
-### ✅ Validation & Error Handling
+## 🛠 Setup & Run Instructions
 
-* Input validation using `@Valid`
-* Custom validation messages
-* Global exception handling (`@ControllerAdvice`)
-* Proper HTTP status codes:
+You have two pathways to launch the Orbit backend. 
 
-    * `400` → Validation errors
-    * `409` → Business conflicts
-    * `204` → Successful deletion
+### Method 1: Bare Metal Java
+1. Ensure your local `mysql` server is actively running matching `Kowshik@1234` alongside the `app_user` in port `3306`.
+2. Ensure you have executed `mvn clean compile`.
+3. In your terminal run:
+   ```bash
+   mvn spring-boot:run
+   ```
+4. Navigate locally to `http://localhost:9090/swagger-ui.html` for API analysis.
 
----
+### Method 2: Docker Containers 🐳
+If you want to boot the entire MySQL server plus the Java Spring application flawlessly dynamically without relying on localized environments:
+1. Fire up a terminal in the root environment.
+2. Build and stand up the internal networks natively:
+   ```bash
+   docker-compose up -d --build
+   ```
 
-### 🔄 Task Lifecycle
-
-* Enum-based status management:
-
-    * `PENDING`
-    * `IN_PROGRESS`
-    * `COMPLETED`
-
----
-
-## 🛠️ Tech Stack
-
-* Java
-* Spring Boot
-* Spring Data JPA
-* MySQL
-* Maven
-* REST APIs
-
----
-
-## 📡 API Endpoints
-
-### Users
-
-* `POST /api/users` → Create user
-* `GET /api/users` → Get all users
+### Booting the Frontend
+Since Orbit's UI operates as a fully native application layout dynamically calling our backend ports securely through configured CORS policies:
+1. Open a terminal anywhere and dive into your internal files natively:
+   ```bash
+   cd frontend
+   ```
+2. Spawn a lightweight HTTP engine via Python:
+   ```bash
+   python3 -m http.server 5500
+   ```
+3. Boot up your web browser dynamically: **[http://localhost:5500](http://localhost:5500)**
 
 ---
 
-### Tasks
+## 📚 Application Walkthrough
 
-* `POST /api/users/{userId}/tasks` → Create task
-* `GET /api/users/{userId}/tasks` → Get tasks for user
-* `PATCH /api/users/{userId}/tasks/{taskId}/status` → Update status
-* `DELETE /api/users/{userId}/tasks/{taskId}` → Delete task
+### 1. Access & The Void Interface
+Upon launching the browser, you are introduced to the **Auth Landing View**. The Spring Backend has inherently blocked all API access globally except the `POST /api/users` and `POST /api/auth/login`. 
+- Utilize the toggle beneath the core login logic box to bounce between Registration and Loading. 
+- Try registering. The system immediately processes your request, throws it into MySQL, and turns the localized message green dynamically parsing the OK state locally!
 
----
-
-## ⚠️ Current Limitations
-
-* No authentication (JWT not implemented yet)
-* All endpoints are publicly accessible
-* Passwords are currently stored without hashing (to be fixed)
-
----
-
-## 🔜 Next Steps
-
-### 🔐 Authentication & Security
-
-* Hash passwords using BCrypt
-* Implement login API
-* Generate JWT tokens
-* Add JWT filter for request validation
-* Secure endpoints (user-specific access)
+### 2. The Command Dashboard
+If the response returned is `200 OK`, the UI seamlessly extracts your unique Bearer Token from the JSON return and hides standard auth layers bringing in the core list.
+- **Creating Tasks:** Use the text field near the top. Press `Add Task`. Your API resolves cleanly dynamically rebuilding your task loop immediately upon network resolve.
+- **Dynamic Paginator:** You are locked statically to resolving chunks dynamically (5-items). Press 'Next'. Orbit loads the remaining chunks dynamically mapping Spring's `Pageable` backend interface correctly updating standard numerical limits gracefully.
+- **Manipulating Properties:**
+    - Change any task's label out to "IN_PROGRESS". Your system silently intercepts the option click, natively routes a clean `PATCH` across Port 9090 modifying only the database integer structure inherently speeding the DOM up.
+    - Click `Edit` to call Orbit's layered modal logic dynamically preloading strings flawlessly over `PUT` commands.
+- **Status Tabs**: The core toggle arrays internally fire native strings seamlessly intercepting our updated Backend parameter rules rebuilding identical pagination cleanly through your active filtering states.
 
 ---
 
-### 🚀 Enhancements
+## 📁 Project Structure
 
-* Pagination for tasks
-* Filtering (status-based tasks)
-* Logging improvements
-* Dockerization & deployment
-
----
-
-## 🧠 Learning Outcomes
-
-* Built a layered backend architecture
-* Understood REST API design principles
-* Implemented validation and global error handling
-* Designed entity relationships using JPA
-* Learned how to structure scalable backend systems
-
----
-
-## 📌 Status
-
-🟡 In Progress — Core backend completed, moving towards authentication and deployment
+```text
+📦 Task-Manager
+ ┣ 📂 frontend               # Glassmorphic SPA Javascript Frontend layer
+ ┃ ┣ 📜 app.js              # State manager and JWT hook rules
+ ┃ ┣ 📜 index.html          # Core modal mappings
+ ┃ ┗ 📜 styles.css          # Design tokens and visual animations
+ ┣ 📂 src
+ ┃ ┣ 📂 main/java/com/kowshik/taskmanager
+ ┃ ┃ ┣ 📂 controller       # RESTful Controller Endpoints mapping Swagger
+ ┃ ┃ ┣ 📂 dto              # Internal Java payload structs
+ ┃ ┃ ┣ 📂 entity           # Native Hibernate/MySQL class binds
+ ┃ ┃ ┣ 📂 exception        # Global 400/401/403/500 JSON Interceptors
+ ┃ ┃ ┣ 📂 repository       # JPA Data layer 
+ ┃ ┃ ┣ 📂 security         # JWT logic, SpringSecurity CORS pipelines
+ ┃ ┃ ┗ 📂 service          # Core Java pagination algorithms
+ ┣ 📜 docker-compose.yml     # Master Docker bridge orchestrator 
+ ┣ 📜 Dockerfile             # Multi-layer Maven compilation routines
+ ┗ 📜 pom.xml               # Standard dependencies
+```

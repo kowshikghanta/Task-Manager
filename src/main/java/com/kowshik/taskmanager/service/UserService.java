@@ -39,6 +39,11 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
+        // Async dispatch
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            sendWelcomeEmailMock(savedUser.getEmail(), savedUser.getName());
+        });
+
         return new UserResponseDTO(
                 savedUser.getId(),
                 savedUser.getName(),
@@ -59,5 +64,29 @@ public class UserService {
                         user.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, String currentPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new org.springframework.security.authentication.BadCredentialsException("Incorrect current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    private void sendWelcomeEmailMock(String recipientEmail, String name) {
+        // Since no real SMTP server is bound via application.properties, this cleanly hooks the architecture
+        // without crashing the Spring Application Context.
+        System.out.println("================================");
+        System.out.println("SMTP DISPATCH TRIGGERED");
+        System.out.println("To: " + recipientEmail);
+        System.out.println("Subject: Welcome to Orbit Tasks, " + name + "!");
+        System.out.println("Body: Your account has been provisioned successfully.");
+        System.out.println("================================");
     }
 }

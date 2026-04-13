@@ -29,9 +29,19 @@ public class TaskController {
             @PathVariable Long userId,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "desc") String sortDirection
     ) {
-        return ResponseEntity.ok(taskService.getTasksByUser(userId, status, page, size));
+        return ResponseEntity.ok(taskService.getTasksByUser(userId, status, page, size, sortDirection));
+    }
+
+    @PutMapping("/{taskId}")
+    public ResponseEntity<TaskResponseDTO> updateTaskFull(
+            @PathVariable Long userId,
+            @PathVariable Long taskId,
+            @Valid @RequestBody TaskRequestDTO updateRequest
+    ) {
+        return ResponseEntity.ok(taskService.updateTaskFull(userId, taskId, updateRequest));
     }
 
     @PatchMapping("/{taskId}/status")
@@ -54,5 +64,11 @@ public class TaskController {
     ) {
         taskService.deleteTask(userId, taskId);
         return ResponseEntity.noContent().build();
+    }
+
+    // Admins or globally authenticated users can view platform metrics
+    @GetMapping("/metrics")
+    public ResponseEntity<Map<String, Object>> getTaskMetrics() {
+        return ResponseEntity.ok(taskService.getGlobalMetrics());
     }
 }

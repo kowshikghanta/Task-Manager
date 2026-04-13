@@ -32,4 +32,13 @@ public class UserController {
         List<UserResponseDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable Long userId,
+            @Valid @RequestBody com.kowshik.taskmanager.dto.UpdatePasswordDTO request
+    ) {
+        userService.updatePassword(userId, request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
+    }
 }

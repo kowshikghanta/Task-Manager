@@ -56,7 +56,7 @@ class TaskServiceTest {
                 .thenReturn(expectedPage);
 
         // Act
-        PaginatedResponseDTO<TaskResponseDTO> result = taskService.getTasksByUser(userId, status, 0, 10);
+        PaginatedResponseDTO<TaskResponseDTO> result = taskService.getTasksByUser(userId, status, 0, 10, "desc");
 
         // Assert
         assertEquals(1, result.getContent().size());
@@ -85,7 +85,7 @@ class TaskServiceTest {
                 .thenReturn(expectedPage);
 
         // Act
-        PaginatedResponseDTO<TaskResponseDTO> result = taskService.getTasksByUser(userId, null, 0, 5);
+        PaginatedResponseDTO<TaskResponseDTO> result = taskService.getTasksByUser(userId, null, 0, 5, "desc");
 
         // Assert
         assertEquals(2, result.getContent().size());
