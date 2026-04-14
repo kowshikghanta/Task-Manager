@@ -1,4 +1,4 @@
-const BASE_URL = `http://${window.location.hostname}:9090/api`;
+const BASE_URL = '/api';
 
 // State Management
 let currentToken = localStorage.getItem('orbit_token');
